@@ -1,0 +1,31 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+- name: incron is installed
+  package:
+    name: incron
+    state: present
+
+- name: incron is configured
+  block:
+
+    - name: incron.allow is present
+      template:
+        src: incron.allow.j2
+        dest: /etc/incron.allow
+      notify: reload incron
+
+    - name: incron.conf is present
+      template:
+        src: incron.conf.j2
+        dest: /etc/incron.conf
+      notify: reload incron
+
+
+- name: incron is started
+  service:
+    name: incrond
+    state: started
+    enabled: true
+
+...
